@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bookswap/providers/swap_provider.dart';
 import 'package:bookswap/models/swap_model.dart';
+import 'package:bookswap/models/book_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class MyOffersScreen extends StatelessWidget {
@@ -147,6 +148,10 @@ class _SwapOfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final swapProvider = Provider.of<SwapProvider>(context, listen: false);
+    
+    // Convert book map to BookModel
+    final book = BookModel.fromMap(offer.book, offer.bookId);
+    final imageUrl = book.imageUrl;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
@@ -162,9 +167,9 @@ class _SwapOfferCard extends StatelessWidget {
                 // Book Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: offer.book.imageUrl != null
+                  child: imageUrl != null
                       ? CachedNetworkImage(
-                          imageUrl: offer.book.imageUrl!,
+                          imageUrl: imageUrl,
                           width: 80,
                           height: 100,
                           fit: BoxFit.cover,
@@ -195,7 +200,7 @@ class _SwapOfferCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        offer.book.title,
+                        book.title,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -205,7 +210,7 @@ class _SwapOfferCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        offer.book.author,
+                        book.author,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
